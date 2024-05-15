@@ -10,7 +10,7 @@ Possible inputs:
 [ciphersystem] = XOR, DES, VIG, RC4       -> type of encryption system we want to use. 
 
 
-[cipherkeyset] = keyset1 (for example)    -> the 'name' of the key we are using. Think of this as the value in a <value>:<key> pair, where you put in the value and 
+[cipherkeyset] = keyset1 (for example)    -> the 'name' of the key we are using. Think of this as the value in a (value):(key) pair, where you put in the value and 
                                              the program will find the key, or create a new 50-character key if the inputted value is not found. 
 
 
