@@ -5,6 +5,8 @@ The parameters of both the functions are:
 Usage: python3 RBAencryption.py [ciphersystem] [cipherkeyset]
 
 Possible inputs: 
+
+
 [ciphersystem] = XOR, DES, VIG, RC4       -> type of encryption system we want to use. 
 
 
