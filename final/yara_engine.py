@@ -67,6 +67,8 @@ def scan_file(rules, file_path):
                 try:
                     with open("match_data.txt", 'a') as file:
                         file.write(match_string)
+                    #Set permissions to ensure file cannot be accessed by anyone besides the superuser
+                    os.chmod("match_data.txt", 0o700)
                 except PermissionError:
                     print(f'Error: Permission denied while accessing match data file.')
                 except Exception as e:
