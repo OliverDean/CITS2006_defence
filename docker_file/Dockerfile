@@ -24,21 +24,34 @@ RUN python3 --version \
 
 # Create a secure_coding directory and copy custom Python scripts to /root/secure_coding
 RUN mkdir -p /root/secure_coding
-COPY encrypt.py /root/secure_coding/encrypt.py
-COPY decrypt.py /root/secure_coding/decrypt.py
-COPY hash_program.py /root/secure_coding/hash_program.py
+COPY DES.py /root/secure_coding/DES.py
+COPY RBAdecryption.py /root/secure_coding/RBAdecryption.py
+COPY RBAencryption.py /root/secure_coding/RBAencryption.py
+COPY RC4.py /root/secure_coding/RC4.py
+COPY readme.txt /root/secure_coding/readme.txt
+COPY sha_hash.py /root/secure_coding/sha_hash.py
+COPY VIG.py /root/secure_coding/VIG.py
+COPY XOR.py /root/secure_coding/XOR.py
 
 # Install any necessary Python packages
 COPY requirements.txt /root/secure_coding/requirements.txt
 RUN pip3 install --no-cache-dir -r /root/secure_coding/requirements.txt
 
 # Make the scripts executable and set permissions
-RUN chmod +x /root/secure_coding/encrypt.py \
-    && chmod +x /root/secure_coding/decrypt.py \
-    && chmod +x /root/secure_coding/hash_program.py \
-    && chmod 700 /root/secure_coding/encrypt.py \
-    && chmod 700 /root/secure_coding/decrypt.py \
-    && chmod 700 /root/secure_coding/hash_program.py
+RUN chmod +x /root/secure_coding/DES.py \
+    && chmod +x /root/secure_coding/RBAdecryption.py \
+    && chmod +x /root/secure_coding/RBAencryption.py \
+    && chmod +x /root/secure_coding/RC4.py \
+    && chmod +x /root/secure_coding/sha_hash.py \
+    && chmod +x /root/secure_coding/VIG.py \
+    && chmod +x /root/secure_coding/XOR.py \
+    && chmod 700 /root/secure_coding/DES.py \
+    && chmod 700 /root/secure_coding/RBAdecryption.py \
+    && chmod 700 /root/secure_coding/RBAencryption.py \
+    && chmod 700 /root/secure_coding/RC4.py \
+    && chmod 700 /root/secure_coding/sha_hash.py \
+    && chmod 700 /root/secure_coding/VIG.py \
+    && chmod 700 /root/secure_coding/XOR.py
 
 # Create users and set passwords
 RUN adduser --disabled-password --gecos "" user1 && echo "user1:user1password" | chpasswd && usermod -aG sudo user1
@@ -66,7 +79,7 @@ RUN for i in $(seq 1 10); do \
     rm /home/user${i}/profile/level1/level2/file.txt; \
     \
     # Create a file with a random string
-    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 30 > /home/user${i}/profile/level1/random_string.txt; \
+    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 300 > /home/user${i}/profile/level1/random_string.txt; \
     \
     # Create files with Star Trek quotes
     echo "Live long and prosper. - Spock" > /home/user${i}/profile/level1/level2/quote1.txt; \
