@@ -63,6 +63,14 @@ def scan_file(rules, file_path):
                 print(f'  Rule: {match.rule}')
                 for string in match.strings:
                     print(f'    String matched: {string}')
+                match_string = f"{match.rule},{file_path}\n"
+                try:
+                    with open("match_data.txt", 'a') as file:
+                        file.write(match_string)
+                except PermissionError:
+                    print(f'Error: Permission denied while accessing match data file.')
+                except Exception as e:
+                    print(f'An error occurred: {e}')
 
 def scan_directory(rules, directory):
     for root, _, files in os.walk(directory):
@@ -72,7 +80,7 @@ def scan_directory(rules, directory):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python3 script_name.py <path_to_directory_to_scan>")
+        print("Usage: python3 yara_engine.py <path_to_directory_to_scan>")
         sys.exit(1)
 
     directory_to_scan = sys.argv[1]
