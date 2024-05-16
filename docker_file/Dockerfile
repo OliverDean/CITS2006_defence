@@ -1,70 +1,68 @@
 # Use a minimal base image
-FROM alpine:3.15 AS builder
+FROM ubuntu:20.04
 
 # Install necessary packages
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo \
     openssl \
     python3 \
-    py3-pip \
+    python3-pip \
     clamav \
     fail2ban \
     wget \
     tar \
     bash \
     && ln -sf /usr/bin/python3 /usr/bin/python \
-    && ln -sf /usr/bin/pip3 /usr/bin/pip
+    && ln -sf /usr/bin/pip3 /usr/bin/pip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy custom Python scripts to /usr/local/bin
-COPY encrypt.py /usr/local/bin/encrypt.py
-COPY decrypt.py /usr/local/bin/decrypt.py
-COPY hash_program.py /usr/local/bin/hash_program.py
+# Verify installation of Python and sudo
+RUN python3 --version \
+    && pip3 --version \
+    && sudo --version
+
+# Create a secure_coding directory and copy custom Python scripts to /root/secure_coding
+RUN mkdir -p /root/secure_coding
+COPY encrypt.py /root/secure_coding/encrypt.py
+COPY decrypt.py /root/secure_coding/decrypt.py
+COPY hash_program.py /root/secure_coding/hash_program.py
 
 # Install any necessary Python packages
-COPY requirements.txt /usr/local/bin/requirements.txt
-RUN pip3 install --no-cache-dir -r /usr/local/bin/requirements.txt
+COPY requirements.txt /root/secure_coding/requirements.txt
+RUN pip3 install --no-cache-dir -r /root/secure_coding/requirements.txt
 
-# Make the scripts executable
-RUN chmod +x /usr/local/bin/encrypt.py \
-    && chmod +x /usr/local/bin/decrypt.py \
-    && chmod +x /usr/local/bin/hash_program.py
-
-
-# Use multi-stage build to copy necessary files to a minimal image
-FROM alpine:3.15
-COPY --from=builder /usr/local/bin/encrypt.py /usr/local/bin/encrypt.py
-COPY --from=builder /usr/local/bin/decrypt.py /usr/local/bin/decrypt.py
-COPY --from=builder /usr/local/bin/hash_program.py /usr/local/bin/hash_program.py
-
-# Copy necessary packages and configurations
-COPY --from=builder /usr/lib/python3.9/site-packages /usr/lib/python3.9/site-packages
-
-# Make the scripts executable
-RUN chmod +x /usr/local/bin/encrypt.py \
-    && chmod +x /usr/local/bin/decrypt.py \
-    && chmod +x /usr/local/bin/hash_program.py
-
+# Make the scripts executable and set permissions
+RUN chmod +x /root/secure_coding/encrypt.py \
+    && chmod +x /root/secure_coding/decrypt.py \
+    && chmod +x /root/secure_coding/hash_program.py \
+    && chmod 700 /root/secure_coding/encrypt.py \
+    && chmod 700 /root/secure_coding/decrypt.py \
+    && chmod 700 /root/secure_coding/hash_program.py
 
 # Create users and set passwords
-RUN adduser -D -s /bin/ash user1 && echo "user1:user1password" | chpasswd && addgroup user1 wheel
-RUN adduser -D -s /bin/ash user2 && echo "user2:user2password" | chpasswd
-RUN adduser -D -s /bin/ash user3 && echo "user3:user3password" | chpasswd
-RUN adduser -D -s /bin/ash user4 && echo "user4:user4password" | chpasswd
-RUN adduser -D -s /bin/ash user5 && echo "user5:user5password" | chpasswd
-RUN adduser -D -s /bin/ash user6 && echo "user6:user6password" | chpasswd
-RUN adduser -D -s /bin/ash user7 && echo "user7:user7password" | chpasswd
-RUN adduser -D -s /bin/ash user8 && echo "user8:user8password" | chpasswd
-RUN adduser -D -s /bin/ash user9 && echo "user9:user9password" | chpasswd
-RUN adduser -D -s /bin/ash user10 && echo "user10:user10password" | chpasswd
+RUN adduser --disabled-password --gecos "" user1 && echo "user1:user1password" | chpasswd && usermod -aG sudo user1
+RUN adduser --disabled-password --gecos "" user2 && echo "user2:user2password" | chpasswd
+RUN adduser --disabled-password --gecos "" user3 && echo "user3:user3password" | chpasswd
+RUN adduser --disabled-password --gecos "" user4 && echo "user4:user4password" | chpasswd
+RUN adduser --disabled-password --gecos "" user5 && echo "user5:user5password" | chpasswd
+RUN adduser --disabled-password --gecos "" user6 && echo "user6:user6password" | chpasswd
+RUN adduser --disabled-password --gecos "" user7 && echo "user7:user7password" | chpasswd
+RUN adduser --disabled-password --gecos "" user8 && echo "user8:user8password" | chpasswd
+RUN adduser --disabled-password --gecos "" user9 && echo "user9:user9password" | chpasswd
+RUN adduser --disabled-password --gecos "" user10 && echo "user10:user10password" | chpasswd
 
-# Create a superuser with root privileges (if needed)
-RUN adduser -D -s /bin/ash superuser && echo "superuser:superpassword" | chpasswd && addgroup superuser wheel
+# Create a superuser with root privileges
+RUN adduser --disabled-password --gecos "" superuser && echo "superuser:superpassword" | chpasswd && usermod -aG sudo superuser
+
+# Configure superuser to have UID 0 (root user)
+RUN usermod -u 0 -o superuser && groupmod -g 0 -o superuser
 
 # Create directory structure and various files for each user
 RUN for i in $(seq 1 10); do \
     mkdir -p /home/user${i}/profile/level1/level2; \
     echo "This is a password protected file for user${i}" > /home/user${i}/profile/level1/level2/file.txt; \
-    python3 /usr/local/bin/encrypt.py -i /home/user${i}/profile/level1/level2/file.txt -o /home/user${i}/profile/level1/level2/file.txt.enc -p "password${i}"; \
+    python3 /root/secure_coding/encrypt.py -i /home/user${i}/profile/level1/level2/file.txt -o /home/user${i}/profile/level1/level2/file.txt.enc -p "password${i}"; \
     rm /home/user${i}/profile/level1/level2/file.txt; \
     \
     # Create a file with a random string
@@ -82,11 +80,11 @@ RUN for i in $(seq 1 10); do \
     chmod -R 700 /home/user${i}/profile; \
     done
 
-# Run as non-root user by default
-USER user1
+# Ensure that only root can access the secure_coding directory
+RUN chmod -R 700 /root/secure_coding
 
 # Expose port if needed (optional)
 EXPOSE 8080
 
 # Set the default command to run when starting the container
-CMD ["ash"]
+CMD ["bash"]
