@@ -145,5 +145,5 @@ def walk_directory_and_hash(directory):
 
 # Example usage
 if __name__ == "__main__":
-    directory_to_walk = "C:\\Users\\olive\\OneDrive\\Desktop\\CompSci"  # Replace directory path
+    directory_to_walk = "C:\\Users\\olive\\OneDrive\\Desktop\\contractor work" # Replace directory path
     walk_directory_and_hash(directory_to_walk)
