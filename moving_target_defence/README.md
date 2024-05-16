@@ -8,6 +8,7 @@ a file has been added/modified/deleted in the filesystem.
 * you can test this with: echo "This is a new file." > ./ExampleDir/SubExampleDir/new_file.txt
 
 a certain time interval has passed.
+* change this interval via changing the variable "interval" value in mtd_system.py
 
 
 I'm running the system via python3 mtd_system.py
