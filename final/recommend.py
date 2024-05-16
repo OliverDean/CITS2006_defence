@@ -20,7 +20,7 @@ def unpack_data(data_path):
             ruleDict.setdefault(rule, 0)
             ruleDict[rule] += 1
         #rename file once done so statistics are weekly
-        os.rename(data_path, data_path + str(datetime.now().strftime("%d/%m/%Y")))
+        os.rename(data_path, data_path + str(datetime.now().strftime("%d-%m-%Y")))
     except FileNotFoundError:
         print(f'Error: The file {data_path} does not exist.')
     except PermissionError:
@@ -33,7 +33,7 @@ def unpack_data(data_path):
 
 def generate_recommendations(output_dir, data_path):
     #use current date in filename and body to distinguish from previous recommendations
-    date = datetime.now().strftime("%d/%m/%Y")
+    date = datetime.now().strftime("%d-%m-%Y")
     file_content = f"RapidoBank Security System Log {date}\n\n"
     #get statistics from yara, mtd and add to file
     yara_matches, pathDict, ruleDict = unpack_data(data_path)
