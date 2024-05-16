@@ -19,8 +19,8 @@ def unpack_data(data_path):
             pathDict[path] += 1
             ruleDict.setdefault(rule, 0)
             ruleDict[rule] += 1
-        #remove file once done so statistics are weekly
-        os.remove(data_path)
+        #rename file once done so statistics are weekly
+        os.rename(data_path, data_path + str(datetime.now().strftime("%d/%m/%Y")))
     except FileNotFoundError:
         print(f'Error: The file {data_path} does not exist.')
     except PermissionError:
