@@ -1,6 +1,6 @@
         print("""Incorrect Usage. Usage: python3 RBAhashalgorithm.py [hashing_algorithm] [salt_set]
-                        [hashing_algorithm] = XOR, 
-                        [salt_set]          = keyset1 (for example)
+                        [hashing_algorithm] = XOR, SHA
+                        [salt_set]          = keyset1, keyset2, lalala, etc. (for example)
                         """)
 
 
