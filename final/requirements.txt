@@ -1,0 +1,9 @@
+Flask==2.2.3
+pycryptodome==3.18.0
+Requests==2.31.0
+scapy==2.5.0
+schedule==1.2.1
+sympy==1.11.1
+watchdog==4.0.0
+yara==1.7.7
+yara_python==4.5.0

@@ -22,36 +22,15 @@ RUN python3 --version \
     && pip3 --version \
     && sudo --version
 
-# Create a secure_coding directory and copy custom Python scripts to /root/secure_coding
+# Create a secure_coding directory and copy all files from the current directory to /root/secure_coding
 RUN mkdir -p /root/secure_coding
-COPY DES.py /root/secure_coding/DES.py
-COPY RBAdecryption.py /root/secure_coding/RBAdecryption.py
-COPY RBAencryption.py /root/secure_coding/RBAencryption.py
-COPY RC4.py /root/secure_coding/RC4.py
-COPY readme.txt /root/secure_coding/readme.txt
-COPY sha_hash.py /root/secure_coding/sha_hash.py
-COPY VIG.py /root/secure_coding/VIG.py
-COPY XOR.py /root/secure_coding/XOR.py
+COPY . /root/secure_coding/
 
 # Install any necessary Python packages
-COPY requirements.txt /root/secure_coding/requirements.txt
 RUN pip3 install --no-cache-dir -r /root/secure_coding/requirements.txt
 
 # Make the scripts executable and set permissions
-RUN chmod +x /root/secure_coding/DES.py \
-    && chmod +x /root/secure_coding/RBAdecryption.py \
-    && chmod +x /root/secure_coding/RBAencryption.py \
-    && chmod +x /root/secure_coding/RC4.py \
-    && chmod +x /root/secure_coding/sha_hash.py \
-    && chmod +x /root/secure_coding/VIG.py \
-    && chmod +x /root/secure_coding/XOR.py \
-    && chmod 700 /root/secure_coding/DES.py \
-    && chmod 700 /root/secure_coding/RBAdecryption.py \
-    && chmod 700 /root/secure_coding/RBAencryption.py \
-    && chmod 700 /root/secure_coding/RC4.py \
-    && chmod 700 /root/secure_coding/sha_hash.py \
-    && chmod 700 /root/secure_coding/VIG.py \
-    && chmod 700 /root/secure_coding/XOR.py
+RUN chmod -R 700 /root/secure_coding
 
 # Create users and set passwords
 RUN adduser --disabled-password --gecos "" user1 && echo "user1:user1password" | chpasswd && usermod -aG sudo user1

@@ -2,30 +2,24 @@ import random
 import string
 
 
-
 def generate_key():
     # Generate a random key of length 50 characters
     key = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50))
     return key
 
-
-
 def save_key(cipher, key):
     with open('RBaEncryptionKeys.txt', 'a') as f:
         f.write(f"{cipher}:{key}\n")
-    
-    pass
-
-
-
 
 def load_key(cipherkeyset):
     try:
         with open('RBaEncryptionKeys.txt', 'r+') as f:
             for line in f:
-                cipher, key = line.strip().split(':')
-                if cipher == cipherkeyset:
-                    return key.encode()
+                parts = line.strip().split(':', 1)  # Split on the first colon only
+                if len(parts) == 2:
+                    cipher, key = parts
+                    if cipher == cipherkeyset:
+                        return key.encode()
         # If the cipherkeyset is not found, generate a new key and save it
         key = generate_key()
         save_key(cipherkeyset, key)
@@ -34,10 +28,7 @@ def load_key(cipherkeyset):
         # If the file doesn't exist, create it and return a new generated key
         key = generate_key()
         save_key(cipherkeyset, key)
-        
         return key.encode()
-    
-    pass
 
 
 

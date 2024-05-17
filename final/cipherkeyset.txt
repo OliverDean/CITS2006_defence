@@ -1,0 +1,8 @@
+XOR:myxorsecretkey
+DES:mydessecretkey
+VIG:myvigsecretkey
+RC4:myrc4secretkey
+AES:myaessecretkey
+CUSTOM1:customkey1
+CUSTOM2:customkey2
+cipher1:key1
