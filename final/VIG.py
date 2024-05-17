@@ -148,24 +148,4 @@ def vig_cipher(file, cipherkeyset, EncryptorDecrypt):
     pass
 
 
-    
 
-# Example usage
-# if __name__ == "__main__":
-#     key_length = 50
-#     key = generate_random_key(key_length)
-#     plain_text = "The Prince of Egypt is a 1998 American animated musical drama film produced by DreamWorks Animation and distributed by DreamWorks Pictures. The second feature film from DreamWorks and the first to be traditionally animated, it is an adaptation of the Book of Exodus and follows the life of Moses from being a prince of Egypt to a prophet chosen by God to carry out his ultimate destiny of leading the Hebrews out of Egypt."
-# 
-#     # Encrypt
-#     status, cipher_text = vigenere_encrypt(key, plain_text)
-#     if status == 0:
-#         print(f"Cipher text: {cipher_text}")
-#     else:
-#         print("Encryption failed.")
-# 
-#     # Decrypt
-#     status, decrypted_text = vigenere_decrypt(key, cipher_text)
-#     if status == 0:
-#         print(f"Decrypted text: {decrypted_text}")
-#     else:
-#         print("Decryption failed.")
