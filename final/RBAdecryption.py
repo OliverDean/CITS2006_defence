@@ -21,7 +21,7 @@ def search_files(directory, ciphersystem, cipherkeyset):
             search_files(filepath, ciphersystem, cipherkeyset)  # If it's a directory, recursively search it
 
 def main(ciphersystem, cipherkeyset):
-    directory = r"./ExampleDir/SubExampleDir"
+    directory = r"/home"
     search_files(directory, ciphersystem, cipherkeyset)
 
 if __name__ == "__main__":
