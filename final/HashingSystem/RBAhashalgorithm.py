@@ -69,7 +69,7 @@ def main(hashing_algorithm, salt_set):
     """
     
 
-    directory = r"C:\Users\Arush Kathal\Desktop\CITS2006\Project\Ciphersystem\ExampleDir"
+    directory = r"\home"
     search_files(directory, hashing_algorithm, salt_set)
     
 
