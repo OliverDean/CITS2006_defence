@@ -36,5 +36,5 @@ def trigger_mtd(event_type):
     # Placeholder for MTD logic
 
 if __name__ == "__main__":
-    start_monitoring('./ExampleDir/SubExampleDir')
+    start_monitoring('/home')
 
