@@ -1,6 +1,11 @@
 # Use a minimal base image
 FROM ubuntu:20.04
 
+# Set environment variables
+ENV TZ=Etc/UTC
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED 1
+
 # Install necessary packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo \
@@ -12,6 +17,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     tar \
     bash \
+    automake \
+    autoconf \
+    libtool \
+    make \
+    gcc \
+    pkg-config \
+    git \
+    tzdata \
     && ln -sf /usr/bin/python3 /usr/bin/python \
     && ln -sf /usr/bin/pip3 /usr/bin/pip \
     && apt-get clean \
@@ -31,6 +44,18 @@ RUN pip3 install --no-cache-dir -r /root/secure_coding/requirements.txt
 
 # Make the scripts executable and set permissions
 RUN chmod -R 700 /root/secure_coding
+
+# Clone and install Yara
+RUN git clone https://github.com/VirusTotal/yara.git /tmp/yara && \
+    cd /tmp/yara && \
+    ./bootstrap.sh && \
+    ./configure && \
+    make && \
+    make install && \
+    ldconfig
+
+# Ensure the library path is set correctly
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 # Create users and set passwords
 RUN adduser --disabled-password --gecos "" user1 && echo "user1:user1password" | chpasswd && usermod -aG sudo user1
