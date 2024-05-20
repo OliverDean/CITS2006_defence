@@ -44,7 +44,7 @@ def search_files(directory, ciphersystem, cipherkeyset):
 
 def main(ciphersystem, cipherkeyset):
     
-    directory = r"C:\Users\Arush Kathal\Desktop\CITS2006\Project\Ciphersystem\ExampleDir\subexample"
+    directory = r"/home"
 
     search_files(directory, ciphersystem, cipherkeyset)
     
