@@ -1,32 +1,40 @@
 import random
 import string
+import logging
 
-# Generate a random key of length 50 characters
 def generate_key():
     return ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50))
 
-# Save the key to a file
 def save_key(cipher, key):
     with open('RBaEncryptionKeys.txt', 'a', encoding='utf-8') as f:
-        f.write(f"{cipher}:{key}\n")
+        escaped_key = key.replace('\\', '\\\\').replace(':', '\\:')
+        f.write(f"{cipher}:{escaped_key}\n")
 
-# Load the key from a file, generating a new one if not found
 def load_key(cipherkeyset):
     try:
-        with open('RBaEncryptionKeys.txt', 'r+', encoding='utf-8') as f:
+        with open('RBaEncryptionKeys.txt', 'r', encoding='utf-8') as f:
             for line in f:
-                cipher, key = line.strip().split(':')
-                if cipher == cipherkeyset:
-                    return key
-        # If the cipherkeyset is not found, generate a new key and save it
+                parts = line.strip().split(':', 1)
+                if len(parts) == 2:
+                    cipher, key = parts
+                    if cipher == cipherkeyset:
+                        return key.replace('\\:', ':').replace('\\\\', '\\')
+                else:
+                    logging.error(f"Incorrectly formatted line in key file: {line}")
         key = generate_key()
         save_key(cipherkeyset, key)
         return key
     except FileNotFoundError:
-        # If the file doesn't exist, create it and return a new generated key
         key = generate_key()
         save_key(cipherkeyset, key)
         return key
+    except Exception as e:
+        logging.error(f"Error loading key: {e}")
+        raise
+
+# Rest of the DES.py code...
+
+
 
 # Initial Permutation Table
 IP = [58, 50, 42, 34, 26, 18, 10, 2,

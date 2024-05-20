@@ -4,9 +4,9 @@ import logging
 import monitor
 import yara_monitor
 import timer
-import RBAencryption
+import mtd_encryption
 import RBAdecryption
-import os
+import random
 
 # Configure logging
 logging.basicConfig(filename='mtd_system.log', level=logging.INFO,
@@ -14,20 +14,26 @@ logging.basicConfig(filename='mtd_system.log', level=logging.INFO,
 
 # Function to change protection settings
 def change_protection_settings():
+    logging.info("Entered change_protection_settings function")
     logging.info("Changing protection settings...")
 
     # Select a random cipher system and generate a new keyset
-    new_cipher_system = RBAencryption.random.choice(['XOR', 'DES', 'VIG', 'RC4'])
-    new_keyset = f'keyset{RBAencryption.random.randint(1, 100)}'
+    try:
+        logging.debug("Selecting a random cipher system...")
+        new_cipher_system = random.choice(['XOR', 'RC4'])
+        logging.info(f"New Cipher System: {new_cipher_system}")
+        
+        logging.debug("Generating a new keyset...")
+        new_keyset = f'keyset{random.randint(1, 100)}'
+        logging.info(f"New Keyset: {new_keyset}")
 
-    logging.info(f"New Cipher System: {new_cipher_system}")
-    logging.info(f"New Keyset: {new_keyset}")
+        logging.debug(f"Starting encryption with {new_cipher_system} and {new_keyset}")
+        mtd_encryption.main(new_cipher_system, new_keyset)
+        logging.debug("Encryption completed")
 
-    # Encrypt files in the directory with the new settings
-    directory = './ExampleDir/SubExampleDir'
-    RBAencryption.main(new_cipher_system, new_keyset)
-
-    logging.info("Protection settings changed successfully.")
+        logging.info("Protection settings changed successfully.")
+    except Exception as e:
+        logging.error(f"Exception occurred: {e}")
 
 # Function to trigger MTD based on different events
 def trigger_mtd(event_type):
@@ -47,7 +53,7 @@ if __name__ == "__main__":
     yara_thread.start()
 
     interval = 10  # Trigger every 10 seconds for testing
-    timer_thread = threading.Thread(target=timer.periodic_trigger, args=(interval,))
+    timer_thread = threading.Thread(target=timer.periodic_trigger, args=(interval, trigger_mtd))
     timer_thread.daemon = True
     timer_thread.start()
 
@@ -57,4 +63,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     logging.info("MTD System Stopped")
-
