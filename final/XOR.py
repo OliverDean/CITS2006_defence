@@ -1,34 +1,38 @@
 import random
 import string
-
+import logging
 
 def generate_key():
-    # Generate a random key of length 50 characters
-    key = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50))
-    return key
+    return ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=50))
 
 def save_key(cipher, key):
-    with open('RBaEncryptionKeys.txt', 'a') as f:
-        f.write(f"{cipher}:{key}\n")
+    with open('RBaEncryptionKeys.txt', 'a', encoding='utf-8') as f:
+        escaped_key = key.replace('\\', '\\\\').replace(':', '\\:')
+        f.write(f"{cipher}:{escaped_key}\n")
 
 def load_key(cipherkeyset):
     try:
-        with open('RBaEncryptionKeys.txt', 'r+') as f:
+        with open('RBaEncryptionKeys.txt', 'r', encoding='utf-8') as f:
             for line in f:
-                parts = line.strip().split(':', 1)  # Split on the first colon only
+                parts = line.strip().split(':', 1)
                 if len(parts) == 2:
                     cipher, key = parts
                     if cipher == cipherkeyset:
-                        return key.encode()
-        # If the cipherkeyset is not found, generate a new key and save it
+                        return key.replace('\\:', ':').replace('\\\\', '\\').encode()
+                else:
+                    logging.error(f"Incorrectly formatted line in key file: {line}")
         key = generate_key()
         save_key(cipherkeyset, key)
         return key.encode()
     except FileNotFoundError:
-        # If the file doesn't exist, create it and return a new generated key
         key = generate_key()
         save_key(cipherkeyset, key)
         return key.encode()
+    except Exception as e:
+        logging.error(f"Error loading key: {e}")
+        raise
+
+# Rest of the XOR.py code...
 
 
 
