@@ -1,4 +1,4 @@
-import yara
+import yara*
 import os
 import csv
 import sys
