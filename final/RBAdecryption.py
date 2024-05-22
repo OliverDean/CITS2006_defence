@@ -35,7 +35,7 @@ def search_files(directory, ciphersystem, cipherkeyset):
         if os.path.isfile(filepath):                                 # Check if the filepath is a file (not a directory)
             
             encrypt_files(filepath, ciphersystem, cipherkeyset)
-            print("encrypted: ", filename)
+            print("decrypted: ", filename)
 
         else:
             
