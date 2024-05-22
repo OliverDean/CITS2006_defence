@@ -75,9 +75,9 @@ def run_scheduler():
 
 
 # Schedule recommendation creation every Sunday at midnight
-schedule.every().sunday.at("00:00").do(generate_recommendations)
+#schedule.every().sunday.at("00:00").do(generate_recommendations)
 # for demonstration increase recommendation creation speed
-#schedule.every(2).minutes.do(generate_recommendations)
+schedule.every(2).minutes.do(generate_recommendations)
 
 #run with sudo python3 recommend.py match_data.txt (or a different path if you want the file in a different place; just make sure it matches with yara_engine.py)
 if __name__ == "__main__":
@@ -90,6 +90,6 @@ if __name__ == "__main__":
     if not os.path.exists(match_path):
         print(f'Error: The file {match_path} does not exist.')
         sys.exit(1)
-    # generate_recommendations(output_path, match_path)
+    generate_recommendations(output_path, match_path)
     print("Scheduler started. Recommendations will be generated every Sunday at midnight.")
     run_scheduler()
