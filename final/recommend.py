@@ -19,8 +19,6 @@ def unpack_data(data_path):
             pathDict[path] += 1
             ruleDict.setdefault(rule, 0)
             ruleDict[rule] += 1
-        #rename file once done so statistics are weekly
-        os.rename(data_path, data_path + str(datetime.now().strftime("%d-%m-%Y")))
     except FileNotFoundError:
         print(f'Error: The file {data_path} does not exist.')
     except PermissionError:
@@ -63,6 +61,8 @@ def generate_recommendations(output_dir, data_path):
         with open(filepath, "w") as file:
             file.write(file_content)
             print("The recommendation generation was successful.")
+        #rename file once done so statistics are weekly
+        os.rename(data_path, data_path[:-4] + str(datetime.now().strftime("%d-%m-%Y")) + ".txt")
     except PermissionError:
         print(f'Error: Permission denied while accessing {filepath}.')
     except Exception as e:
