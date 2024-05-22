@@ -1,0 +1,5 @@
+When transmitting data or storing them in a file, the data are required to be byte strings, 
+but complex objects are seldom in this format. Serialization can convert these complex objects 
+into byte strings for such use. After the byte strings are transmitted, the receiver will have 
+to recover the original object from the byte string. This is known as deserialization.
+
