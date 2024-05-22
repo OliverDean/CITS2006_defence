@@ -39,22 +39,22 @@ def generate_recommendations(output_dir, data_path):
     yara_matches, pathDict, ruleDict = unpack_data(data_path)
     yara_hits = len(yara_matches)
 
-    file_content.append(f"The YARA engine detected {yara_hits} potential vulnerabilities in the file system.\n")
+    file_content += (f"The YARA engine detected {yara_hits} potential vulnerabilities in the file system.\n")
     maxDir = max(pathDict, key=pathDict.get)
-    file_content.append(f"The directory \'{maxDir}\' contained {pathDict[maxDir]} vulnerabilities, the most out of any directory in the filesystem. Make sure no vulnerabilities exist that target this folder.\n")
+    file_content += (f"The directory \'{maxDir}\' contained {pathDict[maxDir]} vulnerabilities, the most out of any directory in the filesystem. Make sure no vulnerabilities exist that target this folder.\n")
     maxRule = max(ruleDict, key=ruleDict.get)
-    file_content.append(f"\'{maxRule}\' was the most common vulnerability detected, with {pathDict[maxDir]} found in the filesystem. Be sure to address this vulnerability directly so that malicious actors cannot exploit it.\n\n")
+    file_content += (f"\'{maxRule}\' was the most common vulnerability detected, with {pathDict[maxDir]} found in the filesystem. Be sure to address this vulnerability directly so that malicious actors cannot exploit it.\n\n")
     
     if ruleDict.get('malware') + ruleDict.get('Complex_Code_Obfuscation') >= 3:
-        file_content.append(f"{ruleDict.get('malware') + ruleDict.get('Complex_Code_Obfuscation')} files were identified as potentially malware. Consider installing or updating antivirus software to reduce the likelihood of malware infecting your system.\n")
+        file_content += (f"{ruleDict.get('malware') + ruleDict.get('Complex_Code_Obfuscation')} files were identified as potentially malware. Consider installing or updating antivirus software to reduce the likelihood of malware infecting your system.\n")
     if ruleDict.get('hidden_files') >= 3:
-        file_content.append(f"{ruleDict.get('hidden_files')} files were noted to be hidden but not encrypted. Make sure all files on the filesystem are encrypted, and avoid hiding files unless they have already been encrypted.\n")
+        file_content += (f"{ruleDict.get('hidden_files')} files were noted to be hidden but not encrypted. Make sure all files on the filesystem are encrypted, and avoid hiding files unless they have already been encrypted.\n")
     if ruleDict.get('network_executables') + ruleDict.get('urls') >= 3:
-        file_content.append(f"{ruleDict.get('network_executables') + ruleDict.get('urls')} files were identified as executables attempting to access network resources. Consider installing or updating firewalls and monitoring inbound and outbound network traffic to ensure no malicious actors are attempting to access your network.\n")
+        file_content += (f"{ruleDict.get('network_executables') + ruleDict.get('urls')} files were identified as executables attempting to access network resources. Consider installing or updating firewalls and monitoring inbound and outbound network traffic to ensure no malicious actors are attempting to access your network.\n")
     if ruleDict.get('port_ssh') >= 3:
-        file_content.append(f"{ruleDict.get('port_ssh')} files were identified as attempting to scan ports and access SSH. Ensure that all ports not being actively used in the system are closed, and that any ports that are in use are monitored for attempted intrusions.\n")
+        file_content += (f"{ruleDict.get('port_ssh')} files were identified as attempting to scan ports and access SSH. Ensure that all ports not being actively used in the system are closed, and that any ports that are in use are monitored for attempted intrusions.\n")
     if ruleDict.get('Reconnaissance_Command_Execution') >= 3:
-        file_content.append(f"{ruleDict.get('Reconnaissance_Command_Execution')} files were identified as attempting to scan the network and identify its topology. Consider modifying the filesystem and isolating sensitive information to alter the topology and negate this attempt, and monitor the system carefully to detect attempted attacks.\n")
+        file_content += (f"{ruleDict.get('Reconnaissance_Command_Execution')} files were identified as attempting to scan the network and identify its topology. Consider modifying the filesystem and isolating sensitive information to alter the topology and negate this attempt, and monitor the system carefully to detect attempted attacks.\n")
     
     #write the file
     filename = f"recommendations_{date}.txt"
